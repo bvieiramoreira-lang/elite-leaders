@@ -399,7 +399,21 @@
     });
   }
 
+  function removeHostingBadge() {
+    const clean = () => {
+      document
+        .querySelectorAll('#nl-badge-frame, #nl-hud-frame, iframe[title="Powered by Netlify"], iframe[title="Netlify"]')
+        .forEach((el) => el.remove());
+    };
+    clean();
+    const obs = new MutationObserver(clean);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  removeHostingBadge();
+
   document.addEventListener("DOMContentLoaded", () => {
+    removeHostingBadge();
     applySiteConfig();
     initAnalytics();
     initNavigation();
