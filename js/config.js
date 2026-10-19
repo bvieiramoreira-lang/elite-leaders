@@ -50,6 +50,6 @@ window.SITE_CONFIG = {
   // 5. INTEGRAÇÕES DE TRÁFEGO (Deixe vazio "" até configurar suas contas)
   analytics: {
     metaPixelId: "",           // Ex: "123456789012345"
-    googleAnalyticsId: ""      // Ex: "G-XXXXXXXXXX"
+    googleAnalyticsId: "G-2C8SKMSHQT"
   }
 };

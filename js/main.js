@@ -202,7 +202,7 @@
       /* eslint-enable */
     }
 
-    if (googleAnalyticsId && googleAnalyticsId.trim() !== "") {
+    if (googleAnalyticsId && googleAnalyticsId.trim() !== "" && typeof window.gtag !== "function") {
       const gaId = googleAnalyticsId.trim();
       const script = document.createElement("script");
       script.async = true;
