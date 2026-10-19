@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="gold3D" x1="15%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%" stop-color="#fff3a1" />
+      <stop offset="30%" stop-color="#f0c73c" />
+      <stop offset="65%" stop-color="#c69f00" />
+      <stop offset="100%" stop-color="#7a5c00" />
+    </linearGradient>
+    <radialGradient id="goldHighlight" cx="42%" cy="32%" r="55%">
+      <stop offset="0%" stop-color="#fff8c4" />
+      <stop offset="45%" stop-color="#e5b822" />
+      <stop offset="85%" stop-color="#b38800" />
+      <stop offset="100%" stop-color="#735500" />
+    </radialGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.2" flood-color="#4a3500" flood-opacity="0.55" />
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)" fill="url(#goldHighlight)" stroke="#8c6700" stroke-width="0.8" stroke-linejoin="round">
+    <!-- Pétala Central Superior (formato cheio 3D) -->
+    <path d="M32 3 C24 13, 21 23, 26.5 36 L37.5 36 C43 23, 40 13, 32 3 Z" />
+    <!-- Pétala Curva Esquerda -->
+    <path d="M26.5 36 C22 22, 11 18, 5 25.5 C1.5 30, 3.5 38.5, 10.5 39.5 C15 40, 17.5 36.5, 15.5 33.5 C14 31.5, 11.5 33, 11.5 30.5 C11.5 27.5, 18.5 26.5, 22.5 36 Z" />
+    <!-- Pétala Curva Direita -->
+    <path d="M37.5 36 C42 22, 53 18, 59 25.5 C62.5 30, 60.5 38.5, 53.5 39.5 C49 40, 46.5 36.5, 48.5 33.5 C50 31.5, 52.5 33, 52.5 30.5 C52.5 27.5, 45.5 26.5, 41.5 36 Z" />
+    <!-- Faixa Horizontal Central -->
+    <rect x="17" y="35.5" width="30" height="5.5" rx="2.75" fill="url(#gold3D)" />
+    <!-- Base Tripla Inferior -->
+    <path d="M26.5 41 C27 49, 29 56.5, 32 61 C35 56.5, 37 49, 37.5 41 Z" />
+    <path d="M24 41 C21.5 47, 16.5 51, 11.5 50.5 C14.5 55, 22.5 53.5, 27.5 45 Z" />
+    <path d="M40 41 C42.5 47, 47.5 51, 52.5 50.5 C49.5 55, 41.5 53.5, 36.5 45 Z" />
+  </g>
+</svg>
