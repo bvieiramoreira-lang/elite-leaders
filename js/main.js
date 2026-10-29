@@ -214,7 +214,7 @@
 
     const { metaPixelId, googleAnalyticsId } = config.analytics;
 
-    if (metaPixelId && metaPixelId.trim() !== "") {
+    if (metaPixelId && metaPixelId.trim() !== "" && typeof window.fbq !== "function") {
       /* eslint-disable */
       !(function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
@@ -253,20 +253,62 @@
     }
   }
 
-  function trackCtaClick(location) {
-    if (typeof window.fbq === "function") {
-      window.fbq("track", "Lead", {
-        content_name: config.brandName || "ELITE Leaders",
-        content_category: "Grupo Pre-Lancamento WhatsApp",
-        cta_location: location
-      });
+  function resolveButtonLocation(el) {
+    const raw =
+      el.getAttribute("data-button-location") ||
+      el.getAttribute("data-cta-location") ||
+      "";
+
+    const locationMap = {
+      "header": "header",
+      "mobile-menu": "header",
+      "hero": "hero",
+      "comunidade": "beneficios",
+      "pre-lancamento": "final",
+      "faq": "faq",
+      "footer": "footer",
+      "mobile-sticky": "barra_fixa"
+    };
+
+    if (raw && locationMap[raw]) {
+      return locationMap[raw];
+    }
+    if (raw) {
+      return raw;
     }
 
-    if (typeof window.gtag === "function") {
-      window.gtag("event", "generate_lead", {
-        event_category: "whatsapp_prelaunch",
-        event_label: location
-      });
+    if (el.closest("#mobile-sticky-bar")) return "barra_fixa";
+    if (el.closest("header")) return "header";
+    if (el.closest("#abertura")) return "hero";
+    if (el.closest("#comunidade")) return "beneficios";
+    if (el.closest("#pre-lancamento")) return "final";
+    if (el.closest("#faq")) return "faq";
+    if (el.closest("footer")) return "footer";
+    return "page";
+  }
+
+  function trackCtaClick(location) {
+    try {
+      if (typeof window.fbq === "function") {
+        window.fbq("track", "Lead", {
+          content_name: "Grupo Pre-Lancamento ELITE Leaders",
+          content_category: "whatsapp_group",
+          button_location: location
+        });
+      }
+    } catch (_) {
+      // Silencia erros de bloqueadores de anúncio
+    }
+
+    try {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "generate_lead", {
+          event_category: "whatsapp_prelaunch",
+          event_label: location
+        });
+      }
+    } catch (_) {
+      // Silencia erros de bloqueadores de anúncio
     }
   }
 
@@ -375,14 +417,25 @@
       }
     });
 
-    document.querySelectorAll("[data-whatsapp-cta]").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const location = btn.getAttribute("data-cta-location") || "page";
+    // Rastreamento pelo destino do link do grupo: a[href*="chat.whatsapp.com"]
+    document.querySelectorAll('a[href*="chat.whatsapp.com"]').forEach((btn) => {
+      let isProcessingClick = false;
+
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        // Proteção contra duplo clique: no máximo 1 Lead por clique
+        if (isProcessingClick) return;
+        isProcessingClick = true;
+
+        const location = resolveButtonLocation(btn);
         trackCtaClick(location);
 
         const href = btn.getAttribute("href") || "";
+        const targetAttr = (btn.getAttribute("target") || "").toLowerCase();
+
         if (!href || href === "#pre-lancamento-whatsapp" || href.startsWith("#")) {
-          e.preventDefault();
+          isProcessingClick = false;
           openModal(
             "Grupo de Pré-Lançamento no WhatsApp",
             `
@@ -390,7 +443,44 @@
               <p>Para configurar o link definitivo em todos os botões da página de uma só vez, basta abrir o arquivo <code>js/config.js</code> e preencher o campo <code>whatsappGroupUrl</code>.</p>
             `
           );
+          return;
         }
+
+        if (targetAttr === "_blank") {
+          window.open(href, "_blank", "noopener,noreferrer");
+          setTimeout(() => {
+            isProcessingClick = false;
+          }, 1200);
+        } else {
+          setTimeout(() => {
+            window.location.href = href;
+            setTimeout(() => {
+              isProcessingClick = false;
+            }, 1000);
+          }, 300);
+        }
+      });
+    });
+
+    // O link de dúvidas (wa.me/554891787828) NÃO dispara Lead — dispara apenas Contact
+    document.querySelectorAll('a[href*="wa.me/554891787828"]').forEach((supportLink) => {
+      let isContactLocked = false;
+
+      supportLink.addEventListener("click", () => {
+        if (isContactLocked) return;
+        isContactLocked = true;
+
+        try {
+          if (typeof window.fbq === "function") {
+            window.fbq("track", "Contact");
+          }
+        } catch (_) {
+          // Segue normalmente se bloqueado
+        }
+
+        setTimeout(() => {
+          isContactLocked = false;
+        }, 1000);
       });
     });
 

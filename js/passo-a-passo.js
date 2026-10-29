@@ -16,10 +16,13 @@
   const META_PIXEL_ID = "1664860865268299";
 
   /**
-   * 1. Inicializa o Pixel da Meta uma única vez (sem duplicar base nem init/PageView)
+   * 1. Inicializa o Pixel da Meta uma única vez (sem duplicar se já iniciado no <head>)
    */
   function initMetaPixelOnce() {
-    if (window.__ELITE_META_PIXEL_INITIALIZED__) return;
+    if (window.__ELITE_META_PIXEL_INITIALIZED__ || typeof window.fbq === "function") {
+      window.__ELITE_META_PIXEL_INITIALIZED__ = true;
+      return;
+    }
     window.__ELITE_META_PIXEL_INITIALIZED__ = true;
 
     try {
