@@ -1,0 +1,651 @@
+/* ==========================================================================
+   ELITE LEADERS — Página de Vendas (/passo-a-passo — Público Frio)
+   Mesma identidade visual da página principal (#070610, #0e033c, #c69f00, #eae8db)
+   Mobile-first, botões >= 48px, sem rolagem horizontal, sem animações pesadas
+   ========================================================================== */
+
+body.page-passo-a-passo {
+  background-color: #070610;
+  color: var(--color-cream);
+  overflow-x: hidden;
+}
+
+/* Cabeçalho enxuto de conversão (apenas Logo, sem menu de navegação) */
+.pap-header {
+  position: relative;
+  z-index: 50;
+  background: linear-gradient(90deg, rgba(7, 6, 16, 0.98) 0%, rgba(14, 3, 60, 0.94) 50%, rgba(7, 6, 16, 0.98) 100%);
+  border-bottom: 1px solid var(--color-border-navy);
+}
+
+.pap-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 68px;
+  padding-block: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .pap-header-inner {
+    justify-content: flex-start;
+    min-height: 74px;
+  }
+}
+
+.pap-brand-lockup {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .pap-brand-lockup {
+    flex-direction: row;
+    gap: 0.75rem;
+    text-align: left;
+  }
+
+  .pap-brand-lockup .brand-divider {
+    display: inline-block;
+    width: 1px;
+    height: 18px;
+    background-color: var(--color-gold-border);
+  }
+}
+
+/* Botões Mobile-First com mínimo de 48px de altura */
+.page-passo-a-passo .btn {
+  min-height: 52px;
+  padding: 0.95rem 1.5rem;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+@media (min-width: 640px) {
+  .page-passo-a-passo .btn-lg {
+    min-height: 54px;
+    padding: 1.05rem 2rem;
+    font-size: 0.92rem;
+  }
+
+  .page-passo-a-passo .btn-xl {
+    min-height: 58px;
+    padding: 1.15rem 2.4rem;
+    font-size: 0.96rem;
+  }
+}
+
+.page-passo-a-passo .mobile-sticky-btn {
+  min-height: 48px;
+  padding: 0.65rem 1.05rem;
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   SEÇÃO 1 — HERO
+   ========================================================================== */
+
+.pap-hero {
+  position: relative;
+  background-color: #070610;
+  color: var(--color-cream);
+  padding-top: clamp(210px, 52vw, 260px);
+  padding-bottom: 3.25rem;
+  border-bottom: 1px solid var(--color-gold-border);
+  overflow: hidden;
+}
+
+.pap-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: #070610;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(7, 6, 16, 0.08) 0%,
+      rgba(7, 6, 16, 0.22) 24%,
+      rgba(7, 6, 16, 0.88) 44%,
+      rgba(7, 6, 16, 0.98) 58%,
+      #070610 100%
+    ),
+    image-set(
+      url('../assets/manual-page-3.webp') type('image/webp'),
+      url('../assets/manual-page-3.png') type('image/png')
+    );
+  background-size: 100% 100%, 130% auto;
+  background-position: center top, 52% top;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 960px) {
+  .pap-hero {
+    min-height: calc(100vh - 74px);
+    padding-block: 4rem 4.5rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .pap-hero-bg {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(7, 6, 16, 0.96) 0%,
+        rgba(7, 6, 16, 0.88) 40%,
+        rgba(7, 6, 16, 0.35) 58%,
+        rgba(7, 6, 16, 0) 75%
+      ),
+      image-set(
+        url('../assets/hero-bg.webp') type('image/webp'),
+        url('../assets/hero-bg.png') type('image/png')
+      );
+    background-size: cover;
+    background-position: right center;
+  }
+}
+
+.pap-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.pap-hero-tag {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  background-color: rgba(198, 159, 0, 0.12);
+  border: 1px solid var(--color-gold-border);
+  padding: 0.38rem 0.8rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+}
+
+.pap-hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.65rem, 2.8vw, 2.45rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--color-cream);
+  margin-bottom: 1rem;
+}
+
+.pap-hero-subtitle {
+  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+  line-height: 1.6;
+  color: rgba(234, 232, 219, 0.88);
+  max-width: 540px;
+  margin-bottom: 1.5rem;
+}
+
+.pap-hero-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 480px;
+}
+
+@media (max-width: 639px) {
+  .pap-hero-cta-wrap {
+    align-items: stretch;
+    max-width: 100%;
+  }
+}
+
+.pap-microcopy {
+  font-size: 0.82rem;
+  color: var(--color-text-light-muted);
+  line-height: 1.45;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .pap-microcopy {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   SEÇÕES ESCURAS PADRONIZADAS
+   ========================================================================== */
+
+.pap-section-dark {
+  background-color: #070610;
+  color: var(--color-cream);
+  padding-block: 3.75rem;
+  border-bottom: 1px solid rgba(234, 232, 219, 0.08);
+}
+
+.pap-section-gradient {
+  position: relative;
+  background: var(--brand-gradient-section);
+  color: var(--color-cream);
+  padding-block: 3.75rem;
+  border-bottom: 1px solid var(--color-gold-border);
+  overflow: hidden;
+}
+
+@media (min-width: 960px) {
+  .pap-section-dark,
+  .pap-section-gradient {
+    padding-block: 5.5rem;
+  }
+}
+
+.pap-section-header {
+  max-width: 720px;
+  margin-bottom: 2.25rem;
+}
+
+.pap-section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.55rem, 2.9vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-cream);
+}
+
+/* ==========================================================================
+   SEÇÃO 2 — IDENTIFICAÇÃO (LISTA COM ÍCONE X / ALERTA)
+   ========================================================================== */
+
+.pap-pain-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  max-width: 820px;
+  margin-bottom: 2.25rem;
+}
+
+.pap-pain-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.1rem 1.2rem;
+  background: rgba(14, 3, 60, 0.35);
+  border: 1px solid rgba(234, 232, 219, 0.1);
+  border-radius: var(--radius-md);
+}
+
+.pap-pain-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.38);
+  color: #f87171;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.pap-pain-text {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--color-cream);
+}
+
+.pap-closing-highlight {
+  max-width: 820px;
+  display: flex;
+  align-items: stretch;
+  background: var(--brand-gradient-card);
+  border: 1px solid var(--color-gold-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.pap-closing-highlight-body {
+  padding: 1.4rem 1.35rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.02rem, 1.4vw, 1.16rem);
+  font-weight: 700;
+  line-height: 1.55;
+  color: var(--color-cream);
+}
+
+@media (min-width: 768px) {
+  .pap-closing-highlight-body {
+    padding: 1.65rem 2rem;
+  }
+}
+
+/* ==========================================================================
+   SEÇÃO 3 — VIRADA
+   ========================================================================== */
+
+.pap-turn-box {
+  max-width: 780px;
+  margin-inline: auto;
+}
+
+.pap-turn-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  font-size: clamp(1.02rem, 1.3vw, 1.14rem);
+  line-height: 1.68;
+  color: rgba(234, 232, 219, 0.9);
+}
+
+/* ==========================================================================
+   SEÇÃO 4 — O PASSO A PASSO EM 3 FRENTES
+   ========================================================================== */
+
+.pap-steps-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 860px;
+  margin-bottom: 2.5rem;
+}
+
+.pap-step-card {
+  position: relative;
+  background: rgba(7, 6, 16, 0.78);
+  border: 1px solid rgba(198, 159, 0, 0.28);
+  border-left: 4px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.35rem;
+}
+
+@media (min-width: 768px) {
+  .pap-step-card {
+    padding: 1.85rem 2rem;
+  }
+}
+
+.pap-step-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.08rem, 1.5vw, 1.28rem);
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-gold);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.01em;
+}
+
+.pap-step-desc {
+  font-size: 0.98rem;
+  line-height: 1.62;
+  color: rgba(234, 232, 219, 0.88);
+}
+
+.pap-steps-cta {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (max-width: 639px) {
+  .pap-steps-cta {
+    justify-content: stretch;
+  }
+}
+
+/* ==========================================================================
+   SEÇÃO 5 — QUEM É O BRUNO (FUNDO ESCURO COESO)
+   ========================================================================== */
+
+.pap-founder-bio {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: rgba(234, 232, 219, 0.88);
+  margin-bottom: 1.5rem;
+}
+
+.pap-founder-signature {
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(234, 232, 219, 0.12);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-gold);
+}
+
+/* ==========================================================================
+   SEÇÃO 6 — O QUE É A ELITE LEADERS (6 CARDS: 2 COLUNAS NO MOBILE, 3 NO DESKTOP)
+   ========================================================================== */
+
+.pap-community-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 960px) {
+  .pap-community-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.35rem;
+  }
+}
+
+.pap-community-card {
+  background: rgba(7, 6, 16, 0.76);
+  border: 1px solid rgba(234, 232, 219, 0.12);
+  border-radius: 10px;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .pap-community-card {
+    padding: 1.75rem 1.5rem;
+  }
+}
+
+.pap-community-icon {
+  margin-bottom: 0.75rem;
+  color: var(--color-gold);
+}
+
+.pap-community-card-title {
+  font-family: var(--font-heading);
+  font-size: clamp(0.95rem, 1.3vw, 1.12rem);
+  font-weight: 800;
+  color: var(--color-cream);
+  margin-bottom: 0.4rem;
+  line-height: 1.25;
+}
+
+.pap-community-card-desc {
+  font-size: clamp(0.82rem, 1vw, 0.92rem);
+  line-height: 1.5;
+  color: rgba(234, 232, 219, 0.8);
+}
+
+.pap-community-note {
+  font-size: 0.82rem;
+  color: var(--color-text-light-muted);
+  text-align: center;
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   SEÇÃO 7 — PARA QUEM É / PARA QUEM NÃO É
+   ========================================================================== */
+
+.pap-fit-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.35rem;
+}
+
+@media (min-width: 840px) {
+  .pap-fit-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+  }
+}
+
+.pap-fit-col {
+  border-radius: 10px;
+  padding: 1.65rem 1.35rem;
+  background: rgba(14, 3, 60, 0.32);
+  border: 1px solid rgba(234, 232, 219, 0.12);
+}
+
+@media (min-width: 768px) {
+  .pap-fit-col {
+    padding: 2rem 1.85rem;
+  }
+}
+
+.pap-fit-col-yes {
+  border-top: 3px solid var(--color-gold);
+}
+
+.pap-fit-col-no {
+  background: rgba(7, 6, 16, 0.75);
+  border-top: 3px solid rgba(248, 113, 113, 0.65);
+}
+
+.pap-fit-heading {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.pap-fit-col-yes .pap-fit-heading {
+  color: var(--color-gold);
+}
+
+.pap-fit-col-no .pap-fit-heading {
+  color: #f87171;
+}
+
+.pap-fit-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.pap-fit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.96rem;
+  line-height: 1.52;
+  color: rgba(234, 232, 219, 0.9);
+}
+
+.pap-fit-icon-yes {
+  color: var(--color-gold);
+  margin-top: 0.18rem;
+  flex-shrink: 0;
+}
+
+.pap-fit-icon-no {
+  color: #f87171;
+  margin-top: 0.18rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   SEÇÃO 8 — CHAMADA PARA O PRÉ-LANÇAMENTO
+   ========================================================================== */
+
+.pap-prelaunch-Intro {
+  font-size: 1.02rem;
+  color: rgba(234, 232, 219, 0.9);
+  max-width: 620px;
+  margin: 0 auto 1.65rem;
+}
+
+.pap-prelaunch-checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 560px;
+  margin: 0 auto 2.25rem;
+  text-align: left;
+}
+
+/* ==========================================================================
+   SEÇÃO 9 — FAQ EM TEMA ESCURO (#070610)
+   ========================================================================== */
+
+.page-passo-a-passo .faq-accordion {
+  border-top: 1px solid rgba(234, 232, 219, 0.12);
+  margin-bottom: 0;
+}
+
+.page-passo-a-passo .faq-item {
+  border-bottom: 1px solid rgba(234, 232, 219, 0.12);
+}
+
+.page-passo-a-passo .faq-trigger {
+  color: var(--color-cream);
+  min-height: 56px;
+}
+
+.page-passo-a-passo .faq-trigger:hover {
+  color: var(--color-gold);
+}
+
+.page-passo-a-passo .faq-icon {
+  background-color: rgba(14, 3, 60, 0.75);
+  color: var(--color-gold);
+  border: 1px solid rgba(198, 159, 0, 0.25);
+}
+
+.page-passo-a-passo .faq-trigger[aria-expanded="true"] .faq-icon {
+  background-color: var(--color-gold);
+  color: var(--color-navy-deep);
+}
+
+.page-passo-a-passo .faq-answer {
+  color: rgba(234, 232, 219, 0.82);
+}
+
+/* ==========================================================================
+   SEÇÃO 10 — CTA FINAL
+   ========================================================================== */
+
+.pap-final-cta {
+  text-align: center;
+  max-width: 760px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.pap-final-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.24;
+  color: var(--color-cream);
+}
