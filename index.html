@@ -590,7 +590,26 @@
           <!-- Coluna Esquerda: Vídeo de 1 minuto sobre a trajetória -->
           <div class="founder-media-column">
             <div class="founder-video-showcase" id="founder-video-container">
-              <div class="founder-video-poster">
+              <video
+                id="founder-video-player"
+                class="configured-media-video"
+                src="assets/bruno-landingpage.mp4"
+                poster="assets/manual-page-3.png"
+                controls
+                preload="metadata"
+                playsinline
+              >
+                <source src="assets/bruno-landingpage.mp4" type="video/mp4" />
+                <source src="bruno ladingpage.mov" type="video/quicktime" />
+                Seu navegador não suporta a reprodução de vídeo.
+              </video>
+              <div
+                class="founder-video-poster"
+                id="founder-video-poster-overlay"
+                role="button"
+                tabindex="0"
+                aria-label="Reproduzir vídeo de apresentação de Bruno Vieira"
+              >
                 <img
                   src="assets/manual-page-3.png"
                   alt="Vídeo — Trajetória de Bruno Vieira"

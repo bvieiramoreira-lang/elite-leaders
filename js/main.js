@@ -146,10 +146,45 @@
 
     const founderVideoContainer = document.getElementById("founder-video-container");
     if (founderVideoContainer && config.media.founderVideoUrl) {
-      founderVideoContainer.innerHTML = createVideoMarkup(
-        config.media.founderVideoUrl,
-        `Mensagem de ${founderName}`
-      );
+      const url = config.media.founderVideoUrl;
+      const isEmbed =
+        url.includes("youtube.com") || url.includes("youtu.be") || url.includes("vimeo.com");
+
+      if (isEmbed) {
+        founderVideoContainer.innerHTML = createVideoMarkup(url, `Mensagem de ${founderName}`);
+      } else {
+        const videoEl = document.getElementById("founder-video-player");
+        const posterOverlay = document.getElementById("founder-video-poster-overlay");
+
+        if (videoEl) {
+          if (videoEl.getAttribute("src") !== url) {
+            videoEl.setAttribute("src", url);
+            videoEl.querySelectorAll("source").forEach((s) => s.setAttribute("src", url));
+            videoEl.load();
+          }
+
+          if (posterOverlay) {
+            const startVideo = () => {
+              posterOverlay.hidden = true;
+              founderVideoContainer.classList.add("is-playing");
+              const playPromise = videoEl.play();
+              if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch(() => {});
+              }
+            };
+
+            posterOverlay.addEventListener("click", startVideo);
+            posterOverlay.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                startVideo();
+              }
+            });
+          }
+        } else {
+          founderVideoContainer.innerHTML = createVideoMarkup(url, `Mensagem de ${founderName}`);
+        }
+      }
     }
 
     // Imagens de fundo dos cards da Seção 4 ("O Que Você Vai Aprender")
