@@ -47,7 +47,10 @@ window.SITE_CONFIG = {
     }
   },
 
-  // 5. INTEGRAÇÕES DE TRÁFEGO (Deixe vazio "" até configurar suas contas)
+  // 5. INTEGRAÇÕES DE TRÁFEGO E PLANILHA DE LEADS (GOOGLE SHEETS)
+  // Cole abaixo a URL do App da Web gerada no Google Apps Script da sua planilha:
+  googleSheetsWebhookUrl: "",
+
   analytics: {
     metaPixelId: "1664860865268299",
     googleAnalyticsId: "G-2C8SKMSHQT"
