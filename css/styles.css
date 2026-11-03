@@ -509,7 +509,7 @@ button {
       rgba(7, 6, 16, 0.3) 52%,
       rgba(7, 6, 16, 0) 70%
     ),
-    url('../assets/hero-bg.png');
+    url('../assets/hero-bg.webp');
   background-size: cover;
   background-position: 78% center;
   background-repeat: no-repeat;
@@ -532,7 +532,7 @@ button {
         rgba(7, 6, 16, 0.98) 60%,
         #070610 100%
       ),
-      url('../assets/manual-page-3.png');
+      url('../assets/manual-page-3.webp');
     background-size: 100% 100%, 132% auto;
     background-position: center top, 52% top;
     background-repeat: no-repeat;

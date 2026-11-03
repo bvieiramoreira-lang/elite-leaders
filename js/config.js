@@ -28,22 +28,22 @@ window.SITE_CONFIG = {
   privacyPolicyUrl: "",
   termsOfUseUrl: "",
 
-  // 4. MÍDIAS (FOTOS E VÍDEOS REAIS EXTRAÍDOS DO MANUAL DA MARCA)
+  // 4. MÍDIAS (FOTOS E VÍDEOS REAIS EXTRAÍDOS DO MANUAL DA MARCA — OTIMIZADOS EM WEBP)
   media: {
-    heroImage: "assets/hero-bg.png",           // Fundo em tela cheia da seção inicial com foto à direita
-    heroVideoUrl: "",                          // Opcional: URL de vídeo na abertura
-    founderImage: "assets/manual-page-3.png",  // Foto de Bruno Vieira (Página 3 do Manual da Logo)
+    heroImage: "assets/hero-bg.webp",           // Fundo em tela cheia da seção inicial com foto à direita
+    heroVideoUrl: "",                           // Opcional: URL de vídeo na abertura
+    founderImage: "assets/manual-page-3.webp",  // Foto de Bruno Vieira (Página 3 do Manual da Logo)
     founderVideoUrl: "assets/bruno-landingpage.mp4", // Vídeo de apresentação na Seção 5
-    openGraphImage: "assets/manual-page-2.png",// Imagem de compartilhamento no WhatsApp
+    openGraphImage: "assets/manual-page-2.png", // Imagem de compartilhamento no WhatsApp
 
     // Imagens de fundo dos 6 cards da seção "O Que Você Vai Aprender"
     pillarImages: {
-      vendas: "assets/vendas.png",
-      marketing: "assets/marketing.png",
-      producao: "assets/producao.png",
-      fornecedores: "assets/fornecedores.png",
-      gestao: "assets/gestao.png",
-      maquinas: "assets/maquinas.png"
+      vendas: "assets/vendas.webp",
+      marketing: "assets/marketing.webp",
+      producao: "assets/producao.webp",
+      fornecedores: "assets/fornecedores.webp",
+      gestao: "assets/gestao.webp",
+      maquinas: "assets/maquinas.webp"
     }
   },
 
