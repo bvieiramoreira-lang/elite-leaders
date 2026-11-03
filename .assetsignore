@@ -1,0 +1,6 @@
+.git
+.gitignore
+netlify.toml
+google-sheets-script.gs
+README.md
+assets/README.md
