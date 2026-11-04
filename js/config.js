@@ -33,7 +33,7 @@ window.SITE_CONFIG = {
     heroImage: "assets/hero-bg.webp",           // Fundo em tela cheia da seção inicial com foto à direita
     heroVideoUrl: "",                           // Opcional: URL de vídeo na abertura
     founderImage: "assets/manual-page-3.webp",  // Foto de Bruno Vieira (Página 3 do Manual da Logo)
-    founderVideoUrl: "assets/bruno-landingpage.mp4", // Vídeo de apresentação na Seção 5
+    founderVideoUrl: "assets/bruno-landingpage.mp4?v=2", // Vídeo de apresentação na Seção 5
     openGraphImage: "assets/manual-page-2.png", // Imagem de compartilhamento no WhatsApp
 
     // Imagens de fundo dos 6 cards da seção "O Que Você Vai Aprender"

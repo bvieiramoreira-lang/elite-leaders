@@ -1,6 +1,7 @@
 # Ignorar arquivos pesados de referência e pacotes temporários
 manual da logo.pdf
-bruno ladingpage.mov
+bruno ladingpage*
+*lading*002*
 publicar/
 elite-leaders-site.zip
 assets/manual-page-1.png
