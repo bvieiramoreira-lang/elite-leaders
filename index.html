@@ -180,10 +180,11 @@
 
       <div class="header-actions">
         <a
-          href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer"
+          href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV"
           class="btn btn-gold btn-sm"
           data-whatsapp-cta
           data-cta-location="header"
+          data-button-location="header"
         >
           <span>ENTRAR NO GRUPO VIP</span>
           <i data-lucide="arrow-up-right" class="icon-sm"></i>
@@ -229,10 +230,11 @@
           <span>Perguntas Frequentes</span>
         </a>
         <a
-          href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer"
+          href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV"
           class="btn btn-gold btn-block"
           data-whatsapp-cta
           data-cta-location="mobile-menu"
+          data-button-location="header"
         >
           <span>ENTRAR NO GRUPO VIP</span>
           <i data-lucide="arrow-right" class="icon-sm"></i>
@@ -267,10 +269,11 @@
           <div class="hero-callout">
             <div class="hero-cta-group">
               <a
-                href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer"
+                href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV"
                 class="btn btn-gold btn-lg"
                 data-whatsapp-cta
                 data-cta-location="hero"
+                data-button-location="hero"
               >
                 <span>QUERO ENTRAR NO GRUPO VIP</span>
                 <i data-lucide="arrow-right" class="icon-md"></i>
@@ -462,10 +465,11 @@
           </p>
 
           <a
-            href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer"
+            href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV"
             class="btn btn-gold btn-lg"
             data-whatsapp-cta
             data-cta-location="comunidade"
+            data-button-location="beneficios"
           >
             <span>QUERO FAZER PARTE DO PRÉ-LANÇAMENTO</span>
             <i data-lucide="arrow-right" class="icon-md"></i>
@@ -749,10 +753,11 @@
           <!-- CTA Principal -->
           <div class="prelaunch-cta-area">
             <a
-              href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer"
+              href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV"
               class="btn btn-gold btn-xl"
               data-whatsapp-cta
               data-cta-location="pre-lancamento"
+              data-button-location="pre_lancamento"
             >
               <span>ENTRAR NO GRUPO GRATUITO</span>
               <i data-lucide="arrow-right" class="icon-md"></i>
@@ -873,10 +878,11 @@
 
         <div class="faq-cta-box">
           <a
-            href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer"
+            href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV"
             class="btn btn-gold btn-lg"
             data-whatsapp-cta
             data-cta-location="faq"
+            data-button-location="faq"
           >
             <span>QUERO ENTRAR NO GRUPO VIP</span>
             <i data-lucide="arrow-right" class="icon-md"></i>
@@ -919,7 +925,7 @@
               <i data-lucide="phone-call" class="icon-xs text-gold"></i>
               <span>Dúvidas: <span data-whatsapp-support-text>+55 48 9178-7828</span></span>
             </a>
-            <a href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer" class="footer-link" data-whatsapp-cta data-cta-location="footer">
+            <a href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" class="footer-link" data-whatsapp-cta data-cta-location="footer" data-button-location="footer">
               <i data-lucide="message-circle" class="icon-xs text-gold"></i>
               <span>Grupo VIP de Pré-Lançamento</span>
             </a>
@@ -958,14 +964,51 @@
         <span class="mobile-sticky-sub">Grupo gratuito de pré-lançamento</span>
       </div>
       <a
-        href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV" target="_blank" rel="noopener noreferrer"
+        href="https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV"
         class="btn btn-gold btn-sm mobile-sticky-btn"
         data-whatsapp-cta
         data-cta-location="mobile-sticky"
+        data-button-location="barra_fixa"
       >
         <span>ENTRAR NO GRUPO</span>
         <i data-lucide="arrow-right" class="icon-xs"></i>
       </a>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL DE CAPTURA DE LEAD (PRÉ-LANÇAMENTO WHATSAPP)
+       ======================================================================== -->
+  <div class="lead-modal-backdrop" id="lead-capture-modal" hidden role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+    <div class="lead-modal-card">
+      <button type="button" class="lead-modal-close" id="lead-modal-close-btn" aria-label="Fechar">×</button>
+      <span class="lead-modal-badge">GRUPO VIP DE PRÉ-LANÇAMENTO</span>
+      <h3 class="lead-modal-title" id="lead-modal-title">Falta pouco para você entrar no grupo!</h3>
+      <p class="lead-modal-subtitle">Preencha seus dados para acessar o grupo gratuito de pré-lançamento.</p>
+      <form class="lead-modal-form" id="lead-capture-form" novalidate>
+        <div class="lead-form-group">
+          <label class="lead-form-label" for="lead-input-name">Nome</label>
+          <input type="text" id="lead-input-name" name="nome" class="lead-form-input" placeholder="Seu nome" autocomplete="name" required />
+          <span class="lead-field-error" id="lead-error-name" role="alert" hidden></span>
+        </div>
+        <div class="lead-form-group">
+          <label class="lead-form-label" for="lead-input-email">E-mail</label>
+          <input type="email" id="lead-input-email" name="email" class="lead-form-input" placeholder="Seu melhor e-mail" autocomplete="email" required />
+          <span class="lead-field-error" id="lead-error-email" role="alert" hidden></span>
+        </div>
+        <div class="lead-form-group">
+          <label class="lead-form-label" for="lead-input-phone">WhatsApp com DDD</label>
+          <input type="tel" id="lead-input-phone" name="telefone" class="lead-form-input" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="tel" maxlength="15" required />
+          <span class="lead-field-error" id="lead-error-phone" role="alert" hidden></span>
+        </div>
+        <p class="lead-form-status" id="lead-form-status" role="status" hidden>Tudo certo! Redirecionando para o grupo...</p>
+        <button type="submit" class="btn btn-gold lead-form-submit" id="lead-form-submit-btn">
+          <span>ENTRAR NO GRUPO AGORA</span>
+        </button>
+      </form>
+      <p class="lead-modal-footer-note">
+        Seus dados estão seguros. Ao continuar, você concorda com a nossa <a href="#privacidade" class="lead-privacy-link" data-legal-trigger="privacy">Política de Privacidade</a>.
+      </p>
     </div>
   </div>
 

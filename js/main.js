@@ -1,23 +1,36 @@
 /**
  * ============================================================================
- * SCRIPT PRINCIPAL — ELITE LEADERS
+ * SCRIPT PRINCIPAL — ELITE LEADERS (PÚBLICO QUENTE — HOME)
  * ============================================================================
  * Gerencia:
  * 1. Injeção da configuração central (js/config.js)
- * 2. Ícones Lucide
- * 3. Menu Mobile e barra fixa de conversão no celular
- * 4. Acordeão de Perguntas Frequentes (FAQ)
- * 5. Eventos de conversão preparados para Meta Pixel e Google Analytics (GA4)
- * 6. Modais de Política de Privacidade, Termos de Uso e aviso de placeholder
+ * 2. Captura de UTMs e fbclid em sessionStorage
+ * 3. Modal de captura de leads antes do redirecionamento para o grupo do WhatsApp
+ * 4. Eventos do Meta Pixel (ID 1664860865268299):
+ *    - AbriuFormulario no clique dos botões do grupo
+ *    - Correspondência Avançada Manual + Lead (com eventID) após envio válido
+ *    - Contact exclusivo no link de dúvidas (wa.me/554891787828)
+ * 5. Envio dos leads via POST para Google Apps Script (timeout máx. 3s)
+ * 6. Menu Mobile, barra fixa mobile, FAQ e Modais Legais
  */
 
 (function () {
   "use strict";
 
   const config = window.SITE_CONFIG || {};
+  const META_PIXEL_ID = "1664860865268299";
+  const PAGE_VARIANT = "publico_quente_home";
+  const WHATSAPP_GROUP_URL =
+    config.whatsappGroupUrl || "https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV";
+
+  // CONSTANTE FÁCIL DE TROCAR — URL do Web App publicado no Google Apps Script:
+  const GOOGLE_SHEETS_WEB_APP_URL =
+    window.GOOGLE_SHEETS_WEB_APP_URL ||
+    config.googleSheetsWebhookUrl ||
+    "";
 
   /**
-   * 1. Aplica os textos e links vindos do arquivo js/config.js
+   * 1. Aplica os textos e mídias vindos do arquivo js/config.js
    */
   function applySiteConfig() {
     const brandPrefix = config.brandPrefix || "ELITE";
@@ -28,7 +41,6 @@
     const founderCompany = config.founderCompany || "Personaliza Brindes";
     const launchDateText = config.launchDateText || "LANÇAMENTO EM NOVEMBRO DE 2026";
     const copyrightYear = config.copyrightYear || "2026";
-    const whatsappUrl = config.whatsappGroupUrl || "#pre-lancamento-whatsapp";
 
     document.querySelectorAll("[data-brand-prefix]").forEach((el) => {
       el.textContent = brandPrefix;
@@ -62,7 +74,6 @@
       el.textContent = copyrightYear;
     });
 
-    // Atualiza SEO e Open Graph dinamicamente caso o nome da marca mude
     const fullTitle = `${brandName} | ${brandTagline}`;
     document.title = fullTitle;
 
@@ -80,28 +91,18 @@
       if (ogImg) ogImg.setAttribute("content", config.media.openGraphImage);
     }
 
-    // Atualiza todos os botões de WhatsApp em um único lugar
-    const isRealWhatsappUrl =
-      whatsappUrl &&
-      whatsappUrl !== "#pre-lancamento-whatsapp" &&
-      !whatsappUrl.startsWith("#");
-
+    // Garante o href nos botões de grupo (o clique é interceptado para abrir o modal)
     document.querySelectorAll("[data-whatsapp-cta]").forEach((btn) => {
-      btn.setAttribute("href", whatsappUrl);
-      if (isRealWhatsappUrl) {
-        btn.setAttribute("target", "_blank");
-        btn.setAttribute("rel", "noopener noreferrer");
-      }
+      btn.setAttribute("href", WHATSAPP_GROUP_URL);
+      btn.removeAttribute("target");
     });
 
-    // Atualiza link do Instagram
     if (config.instagramUrl) {
       document.querySelectorAll("[data-instagram-link]").forEach((link) => {
         link.setAttribute("href", config.instagramUrl);
       });
     }
 
-    // Atualiza link e número do WhatsApp de dúvidas no rodapé
     if (config.whatsappSupportUrl) {
       document.querySelectorAll("[data-whatsapp-support-link]").forEach((link) => {
         link.setAttribute("href", config.whatsappSupportUrl);
@@ -113,7 +114,6 @@
       });
     }
 
-    // Renderiza mídias reais se configuradas em js/config.js
     applyMediaSlots(brandName, founderName);
   }
 
@@ -187,7 +187,6 @@
       }
     }
 
-    // Imagens de fundo dos cards da Seção 4 ("O Que Você Vai Aprender")
     if (config.media.pillarImages) {
       document.querySelectorAll("[data-pillar-card]").forEach((card) => {
         const key = card.getAttribute("data-pillar-card");
@@ -207,71 +206,25 @@
   }
 
   /**
-   * 3. Inicializa Meta Pixel e Google Analytics (GA4) apenas se os IDs existirem
-   */
-  function initAnalytics() {
-    if (!config.analytics) return;
-
-    const { metaPixelId, googleAnalyticsId } = config.analytics;
-
-    if (metaPixelId && metaPixelId.trim() !== "" && typeof window.fbq !== "function") {
-      /* eslint-disable */
-      !(function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = "2.0";
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
-      window.fbq("init", metaPixelId.trim());
-      window.fbq("track", "PageView");
-      /* eslint-enable */
-    }
-
-    if (googleAnalyticsId && googleAnalyticsId.trim() !== "" && typeof window.gtag !== "function") {
-      const gaId = googleAnalyticsId.trim();
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-      document.head.appendChild(script);
-
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function () {
-        window.dataLayer.push(arguments);
-      };
-      window.gtag("js", new Date());
-      window.gtag("config", gaId);
-    }
-  }
-
-  /**
-   * Captura e persiste UTMs e IDs de clique de anúncio (Meta / Google)
+   * 3. Captura e persiste UTMs e fbclid em sessionStorage (com try/catch)
    */
   function captureAndGetUtms() {
-    const STORAGE_KEY = "elite_leaders_utms";
+    const STORAGE_KEY = "elite_leaders_utms_session";
     const keys = [
       "utm_source",
       "utm_medium",
       "utm_campaign",
       "utm_content",
       "utm_term",
-      "fbclid",
-      "gclid"
+      "fbclid"
     ];
 
     let stored = {};
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) stored = JSON.parse(raw) || {};
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        stored = JSON.parse(raw) || {};
+      }
     } catch (_) {}
 
     try {
@@ -279,29 +232,36 @@
       let updated = false;
       keys.forEach((k) => {
         const val = params.get(k);
-        if (val && val.trim() !== "") {
+        if (val !== null && val.trim() !== "") {
           stored[k] = val.trim();
           updated = true;
         }
       });
       if (updated) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
       }
     } catch (_) {}
 
     return {
-      utm_source: stored.utm_source || "direto",
+      utm_source: stored.utm_source || "",
       utm_medium: stored.utm_medium || "",
       utm_campaign: stored.utm_campaign || "",
       utm_content: stored.utm_content || "",
       utm_term: stored.utm_term || "",
-      fbclid: stored.fbclid || "",
-      gclid: stored.gclid || ""
+      fbclid: stored.fbclid || ""
     };
   }
 
+  /**
+   * 4. Utilitários de Formatação e Validação
+   */
   function formatPhoneMask(value) {
-    const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
+    let digits = String(value || "").replace(/\D/g, "");
+    if (digits.length > 11 && digits.startsWith("55")) {
+      digits = digits.slice(2);
+    }
+    digits = digits.slice(0, 11);
+
     if (digits.length === 0) return "";
     if (digits.length <= 2) return `(${digits}`;
     if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
@@ -311,26 +271,36 @@
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   }
 
-  function sendLeadToGoogleSheets(leadData) {
-    const webhookUrl = (config.googleSheetsWebhookUrl || "").trim();
-    if (!webhookUrl) return;
-
-    try {
-      const bodyStr = JSON.stringify(leadData);
-      fetch(webhookUrl, {
-        method: "POST",
-        mode: "no-cors",
-        keepalive: true,
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: bodyStr
-      }).catch(() => {});
-    } catch (_) {
-      // Nunca bloqueia o redirecionamento
+  function extractLocalPhoneDigits(value) {
+    let digits = String(value || "").replace(/\D/g, "");
+    if (digits.length > 11 && digits.startsWith("55")) {
+      digits = digits.slice(2);
     }
+    return digits.slice(0, 11);
   }
 
+  function removeAccents(str) {
+    return String(str || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(email || "").trim());
+  }
+
+  function isValidBrazilianPhone(value) {
+    const digits = extractLocalPhoneDigits(value);
+    if (digits.length !== 10 && digits.length !== 11) return false;
+    const ddd = parseInt(digits.slice(0, 2), 10);
+    if (isNaN(ddd) || ddd < 11 || ddd > 99) return false;
+    return true;
+  }
+
+  /**
+   * 5. Resolve a posição do botão clicado dentro do padrão exigido:
+   * header, hero, beneficios, passo_a_passo, pre_lancamento, faq, cta_final, footer, barra_fixa
+   */
   function resolveButtonLocation(el) {
     const raw =
       el.getAttribute("data-button-location") ||
@@ -342,57 +312,72 @@
       "mobile-menu": "header",
       "hero": "hero",
       "comunidade": "beneficios",
-      "pre-lancamento": "final",
+      "beneficios": "beneficios",
+      "passo_a_passo": "passo_a_passo",
+      "pre-lancamento": "pre_lancamento",
+      "pre_lancamento": "pre_lancamento",
       "faq": "faq",
+      "cta_final": "cta_final",
       "footer": "footer",
-      "mobile-sticky": "barra_fixa"
+      "mobile-sticky": "barra_fixa",
+      "barra_fixa": "barra_fixa"
     };
 
     if (raw && locationMap[raw]) {
       return locationMap[raw];
-    }
-    if (raw) {
-      return raw;
     }
 
     if (el.closest("#mobile-sticky-bar")) return "barra_fixa";
     if (el.closest("header")) return "header";
     if (el.closest("#abertura")) return "hero";
     if (el.closest("#comunidade")) return "beneficios";
-    if (el.closest("#pre-lancamento")) return "final";
+    if (el.closest("#passo-a-passo")) return "passo_a_passo";
+    if (el.closest("#pre-lancamento")) return "pre_lancamento";
     if (el.closest("#faq")) return "faq";
+    if (el.closest("#cta-final")) return "cta_final";
     if (el.closest("footer")) return "footer";
-    return "page";
-  }
-
-  function trackCtaClick(location) {
-    try {
-      if (typeof window.fbq === "function") {
-        window.fbq("track", "Lead", {
-          content_name: "Grupo Pre-Lancamento ELITE Leaders",
-          content_category: "whatsapp_group",
-          page_variant: "publico_quente_home",
-          button_location: location
-        });
-      }
-    } catch (_) {
-      // Silencia erros de bloqueadores de anúncio
-    }
-
-    try {
-      if (typeof window.gtag === "function") {
-        window.gtag("event", "generate_lead", {
-          event_category: "whatsapp_prelaunch",
-          event_label: location
-        });
-      }
-    } catch (_) {
-      // Silencia erros de bloqueadores de anúncio
-    }
+    return "hero";
   }
 
   /**
-   * 4. Interações de Navegação Mobile e Barra Fixa Mobile
+   * 6. Envia os dados do lead via POST para o Google Apps Script (com timeout de 3s)
+   */
+  function saveLeadToGoogleSheets(leadPayload) {
+    const webhookUrl = String(
+      window.GOOGLE_SHEETS_WEB_APP_URL ||
+      (window.SITE_CONFIG && window.SITE_CONFIG.googleSheetsWebhookUrl) ||
+      GOOGLE_SHEETS_WEB_APP_URL ||
+      ""
+    ).trim();
+
+    if (!webhookUrl) {
+      return Promise.resolve();
+    }
+
+    const timeoutPromise = new Promise((resolve) => {
+      setTimeout(resolve, 3000);
+    });
+
+    let fetchPromise;
+    try {
+      fetchPromise = fetch(webhookUrl, {
+        method: "POST",
+        mode: "no-cors",
+        keepalive: true,
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(leadPayload)
+      }).catch(() => {});
+    } catch (_) {
+      fetchPromise = Promise.resolve();
+    }
+
+    return Promise.race([fetchPromise, timeoutPromise]);
+  }
+
+  /**
+   * 7. Interações de Navegação Mobile e Barra Fixa Mobile
    */
   function initNavigation() {
     const toggleBtn = document.querySelector(".mobile-menu-toggle");
@@ -430,7 +415,7 @@
   }
 
   /**
-   * 5. Acordeão da Seção 7 (Perguntas Frequentes)
+   * 8. Acordeão da Seção 7 (Perguntas Frequentes)
    */
   function initFaqAccordion() {
     const triggers = document.querySelectorAll(".faq-trigger");
@@ -458,48 +443,18 @@
   }
 
   /**
-   * 6. Gerenciamento de Cliques nos CTAs e Modais
+   * 9. Gerenciamento de Cliques nos CTAs, Modal de Formulário e Modais Legais
    */
   function initModalsAndCtas() {
+    // Captura antecipada de UTMs e fbclid ao entrar na página
+    captureAndGetUtms();
+
     const modal = document.getElementById("site-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalBody = document.getElementById("modal-body");
     const modalCloseBtn = document.getElementById("modal-close-btn");
 
-    function openModal(title, htmlContent) {
-      if (!modal || !modalTitle || !modalBody) return;
-      modalTitle.textContent = title;
-      modalBody.innerHTML = htmlContent;
-      modal.hidden = false;
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeModal() {
-      if (!modal) return;
-      modal.hidden = true;
-      document.body.style.overflow = "";
-    }
-
-    if (modalCloseBtn) {
-      modalCloseBtn.addEventListener("click", closeModal);
-    }
-
-    if (modal) {
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) closeModal();
-      });
-    }
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal && !modal.hidden) {
-        closeModal();
-      }
-    });
-
-    // Inicializa captura antecipada de UTMs da URL ao entrar na página
-    captureAndGetUtms();
-
-    // Cria o Modal de Captura de Lead (Nome, E-mail e Telefone)
+    // Garante que o modal de captura de lead exista no DOM
     let leadModal = document.getElementById("lead-capture-modal");
     if (!leadModal) {
       leadModal = document.createElement("div");
@@ -513,27 +468,32 @@
         <div class="lead-modal-card">
           <button type="button" class="lead-modal-close" id="lead-modal-close-btn" aria-label="Fechar">×</button>
           <span class="lead-modal-badge">GRUPO VIP DE PRÉ-LANÇAMENTO</span>
-          <h3 class="lead-modal-title" id="lead-modal-title">Falta só um passo para entrar no grupo gratuito</h3>
-          <p class="lead-modal-subtitle">Preencha seus dados abaixo para liberar seu acesso imediato ao grupo no WhatsApp:</p>
+          <h3 class="lead-modal-title" id="lead-modal-title">Falta pouco para você entrar no grupo!</h3>
+          <p class="lead-modal-subtitle">Preencha seus dados para acessar o grupo gratuito de pré-lançamento.</p>
           <form class="lead-modal-form" id="lead-capture-form" novalidate>
             <div class="lead-form-group">
-              <label class="lead-form-label" for="lead-input-name">Seu nome</label>
-              <input type="text" id="lead-input-name" name="nome" class="lead-form-input" placeholder="Digite seu nome completo" autocomplete="name" required />
+              <label class="lead-form-label" for="lead-input-name">Nome</label>
+              <input type="text" id="lead-input-name" name="nome" class="lead-form-input" placeholder="Seu nome" autocomplete="name" required />
+              <span class="lead-field-error" id="lead-error-name" role="alert" hidden></span>
             </div>
             <div class="lead-form-group">
-              <label class="lead-form-label" for="lead-input-email">Seu melhor e-mail</label>
-              <input type="email" id="lead-input-email" name="email" class="lead-form-input" placeholder="seu@email.com" autocomplete="email" required />
+              <label class="lead-form-label" for="lead-input-email">E-mail</label>
+              <input type="email" id="lead-input-email" name="email" class="lead-form-input" placeholder="Seu melhor e-mail" autocomplete="email" required />
+              <span class="lead-field-error" id="lead-error-email" role="alert" hidden></span>
             </div>
             <div class="lead-form-group">
-              <label class="lead-form-label" for="lead-input-phone">Seu WhatsApp (com DDD)</label>
-              <input type="tel" id="lead-input-phone" name="telefone" class="lead-form-input" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric" required />
+              <label class="lead-form-label" for="lead-input-phone">WhatsApp com DDD</label>
+              <input type="tel" id="lead-input-phone" name="telefone" class="lead-form-input" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="tel" maxlength="15" required />
+              <span class="lead-field-error" id="lead-error-phone" role="alert" hidden></span>
             </div>
-            <p class="lead-form-error" id="lead-form-error" hidden></p>
+            <p class="lead-form-status" id="lead-form-status" role="status" hidden>Tudo certo! Redirecionando para o grupo...</p>
             <button type="submit" class="btn btn-gold lead-form-submit" id="lead-form-submit-btn">
-              <span>IR PARA O GRUPO NO WHATSAPP</span>
+              <span>ENTRAR NO GRUPO AGORA</span>
             </button>
           </form>
-          <p class="lead-modal-footer-note">Seus dados estão seguros. Você será redirecionado para o grupo oficial imediatamente.</p>
+          <p class="lead-modal-footer-note">
+            Seus dados estão seguros. Ao continuar, você concorda com a nossa <a href="#privacidade" class="lead-privacy-link" data-legal-trigger="privacy">Política de Privacidade</a>.
+          </p>
         </div>
       `;
       document.body.appendChild(leadModal);
@@ -543,28 +503,68 @@
     const leadNameInput = document.getElementById("lead-input-name");
     const leadEmailInput = document.getElementById("lead-input-email");
     const leadPhoneInput = document.getElementById("lead-input-phone");
-    const leadErrorEl = document.getElementById("lead-form-error");
+    const leadNameError = document.getElementById("lead-error-name");
+    const leadEmailError = document.getElementById("lead-error-email");
+    const leadPhoneError = document.getElementById("lead-error-phone");
+    const leadStatusEl = document.getElementById("lead-form-status");
     const leadSubmitBtn = document.getElementById("lead-form-submit-btn");
     const leadCloseBtn = document.getElementById("lead-modal-close-btn");
 
-    let activeGroupUrl = config.whatsappGroupUrl || "https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV";
+    let activeGroupUrl = WHATSAPP_GROUP_URL;
     let activeButtonLocation = "hero";
     let isSubmittingLead = false;
 
+    function setFieldError(inputEl, errorEl, message) {
+      if (inputEl) inputEl.classList.add("is-invalid");
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.hidden = false;
+      }
+    }
+
+    function clearFieldError(inputEl, errorEl) {
+      if (inputEl) inputEl.classList.remove("is-invalid");
+      if (errorEl) {
+        errorEl.textContent = "";
+        errorEl.hidden = true;
+      }
+    }
+
+    function clearAllErrors() {
+      clearFieldError(leadNameInput, leadNameError);
+      clearFieldError(leadEmailInput, leadEmailError);
+      clearFieldError(leadPhoneInput, leadPhoneError);
+      if (leadStatusEl) leadStatusEl.hidden = true;
+    }
+
     function openLeadModal(targetUrl, location) {
-      activeGroupUrl = targetUrl || config.whatsappGroupUrl || "https://chat.whatsapp.com/COnk3PsetVd3xpBVKX5qPV";
-      activeButtonLocation = location || "page";
-      if (leadErrorEl) leadErrorEl.hidden = true;
+      activeGroupUrl = targetUrl || WHATSAPP_GROUP_URL;
+      activeButtonLocation = location || "hero";
+      clearAllErrors();
       leadModal.hidden = false;
       document.body.style.overflow = "hidden";
+
+      // Dispara AbriuFormulario no Pixel da Meta
+      try {
+        if (typeof window.fbq === "function") {
+          window.fbq("trackCustom", "AbriuFormulario", {
+            page_variant: PAGE_VARIANT,
+            button_location: activeButtonLocation
+          });
+        }
+      } catch (_) {}
+
       setTimeout(() => {
         if (leadNameInput) leadNameInput.focus();
       }, 60);
     }
 
     function closeLeadModal() {
+      if (isSubmittingLead) return;
       leadModal.hidden = true;
-      document.body.style.overflow = "";
+      if (!modal || modal.hidden) {
+        document.body.style.overflow = "";
+      }
     }
 
     if (leadCloseBtn) {
@@ -575,113 +575,175 @@
       if (e.target === leadModal) closeLeadModal();
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !leadModal.hidden) {
-        closeLeadModal();
-      }
-    });
+    if (leadNameInput) {
+      leadNameInput.addEventListener("input", () => {
+        clearFieldError(leadNameInput, leadNameError);
+      });
+    }
+
+    if (leadEmailInput) {
+      leadEmailInput.addEventListener("input", () => {
+        clearFieldError(leadEmailInput, leadEmailError);
+      });
+    }
 
     if (leadPhoneInput) {
       leadPhoneInput.addEventListener("input", (e) => {
         e.target.value = formatPhoneMask(e.target.value);
+        clearFieldError(leadPhoneInput, leadPhoneError);
       });
     }
 
     if (leadForm) {
-      leadForm.addEventListener("submit", (e) => {
+      leadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (isSubmittingLead) return;
+
+        clearAllErrors();
 
         const nome = (leadNameInput ? leadNameInput.value : "").trim();
         const email = (leadEmailInput ? leadEmailInput.value : "").trim();
         const telefone = (leadPhoneInput ? leadPhoneInput.value : "").trim();
-        const phoneDigits = telefone.replace(/\D/g, "");
+
+        let firstInvalidInput = null;
 
         if (nome.length < 2) {
-          if (leadErrorEl) {
-            leadErrorEl.textContent = "Por favor, informe seu nome.";
-            leadErrorEl.hidden = false;
-          }
-          if (leadNameInput) leadNameInput.focus();
+          setFieldError(leadNameInput, leadNameError, "Por favor, informe seu nome.");
+          if (!firstInvalidInput) firstInvalidInput = leadNameInput;
+        }
+
+        if (!isValidEmail(email)) {
+          setFieldError(
+            leadEmailInput,
+            leadEmailError,
+            "Por favor, informe um e-mail válido (ex.: voce@empresa.com)."
+          );
+          if (!firstInvalidInput) firstInvalidInput = leadEmailInput;
+        }
+
+        if (!isValidBrazilianPhone(telefone)) {
+          setFieldError(
+            leadPhoneInput,
+            leadPhoneError,
+            "Informe seu WhatsApp completo com DDD (10 ou 11 números)."
+          );
+          if (!firstInvalidInput) firstInvalidInput = leadPhoneInput;
+        }
+
+        if (firstInvalidInput) {
+          firstInvalidInput.focus();
           return;
         }
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          if (leadErrorEl) {
-            leadErrorEl.textContent = "Por favor, informe um e-mail válido.";
-            leadErrorEl.hidden = false;
-          }
-          if (leadEmailInput) leadEmailInput.focus();
-          return;
-        }
-
-        if (phoneDigits.length < 10) {
-          if (leadErrorEl) {
-            leadErrorEl.textContent = "Por favor, informe seu WhatsApp com DDD.";
-            leadErrorEl.hidden = false;
-          }
-          if (leadPhoneInput) leadPhoneInput.focus();
-          return;
-        }
-
+        // Trava o botão e mostra "Enviando..."
         isSubmittingLead = true;
-        if (leadErrorEl) leadErrorEl.hidden = true;
         if (leadSubmitBtn) {
           leadSubmitBtn.disabled = true;
-          leadSubmitBtn.innerHTML = "<span>REDIRECIONANDO PARA O GRUPO...</span>";
+          leadSubmitBtn.innerHTML = "<span>Enviando...</span>";
         }
 
+        // Formatação para Correspondência Avançada Manual (Meta Pixel)
+        const emailFormatado = email.toLowerCase().replace(/\s+/g, "");
+        const localPhoneDigits = extractLocalPhoneDigits(telefone);
+        const telefoneFormatado = "55" + localPhoneDigits;
+
+        const cleanNameParts = removeAccents(nome.toLowerCase())
+          .replace(/[^a-z\s]/g, " ")
+          .split(/\s+/)
+          .filter(Boolean);
+        const primeiroNome = cleanNameParts[0] || "";
+        const sobrenome =
+          cleanNameParts.length > 1 ? cleanNameParts.slice(1).join(" ") : "";
+
+        // ID único do evento Lead (para deduplicação com API de Conversões)
+        const eventId =
+          "lead_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
+
+        // 1. Dispara Correspondência Avançada Manual + Evento Lead no Pixel da Meta
+        try {
+          if (typeof window.fbq === "function") {
+            window.fbq("init", META_PIXEL_ID, {
+              em: emailFormatado,
+              ph: telefoneFormatado,
+              fn: primeiroNome,
+              ln: sobrenome,
+              country: "br"
+            });
+
+            window.fbq(
+              "track",
+              "Lead",
+              {
+                content_name: "Grupo Pre-Lancamento ELITE Leaders",
+                content_category: "whatsapp_group",
+                page_variant: PAGE_VARIANT,
+                button_location: activeButtonLocation
+              },
+              { eventID: eventId }
+            );
+          }
+        } catch (_) {
+          // Segue normalmente se bloqueador de anúncios impedir o fbq
+        }
+
+        // 2. Monta o payload com as colunas exatas da planilha
         const utms = captureAndGetUtms();
         const leadPayload = {
           data_hora: new Date().toLocaleString("pt-BR"),
-          nome,
-          email,
-          telefone,
-          pagina_tipo: "Quente",
-          page_variant: "publico_quente_home",
-          button_location: activeButtonLocation,
+          nome: nome,
+          email: emailFormatado,
+          telefone: telefone,
+          pagina: PAGE_VARIANT,
+          botao: activeButtonLocation,
           utm_source: utms.utm_source,
           utm_medium: utms.utm_medium,
           utm_campaign: utms.utm_campaign,
           utm_content: utms.utm_content,
           utm_term: utms.utm_term,
           fbclid: utms.fbclid,
-          gclid: utms.gclid,
-          page_url: window.location.href,
-          referrer: document.referrer || ""
+          event_id: eventId
         };
 
-        // 1. Envia os dados e UTMs para a planilha Google Sheets
-        sendLeadToGoogleSheets(leadPayload);
-
-        // 2. Dispara o evento Lead no Pixel da Meta e GA4 (1 única vez por envio)
-        trackCtaClick(activeButtonLocation);
-
-        // 3. Redireciona para o grupo do WhatsApp após ~300ms
-        setTimeout(() => {
+        // Timeout de segurança absoluto para nunca travar o usuário
+        let hasRedirected = false;
+        const doRedirect = () => {
+          if (hasRedirected) return;
+          hasRedirected = true;
           window.location.href = activeGroupUrl;
-          setTimeout(() => {
-            isSubmittingLead = false;
-            if (leadSubmitBtn) {
-              leadSubmitBtn.disabled = false;
-              leadSubmitBtn.innerHTML = "<span>IR PARA O GRUPO NO WHATSAPP</span>";
-            }
-          }, 1500);
-        }, 300);
+        };
+
+        const safetyFallbackTimer = setTimeout(doRedirect, 3400);
+
+        // 3. Salva na planilha (aguarda no máximo 3 segundos)
+        await saveLeadToGoogleSheets(leadPayload);
+
+        // 4. Mostra mensagem rápida de confirmação e redireciona após ~400ms
+        if (leadStatusEl) {
+          leadStatusEl.textContent = "Tudo certo! Redirecionando para o grupo...";
+          leadStatusEl.hidden = false;
+        }
+        if (leadSubmitBtn) {
+          leadSubmitBtn.innerHTML = "<span>Tudo certo! Redirecionando para o grupo...</span>";
+        }
+
+        setTimeout(() => {
+          clearTimeout(safetyFallbackTimer);
+          doRedirect();
+        }, 400);
       });
     }
 
-    // Intercepta todos os botões que levam para o grupo: a[href*="chat.whatsapp.com"]
+    // Intercepta todos os botões que levam para o grupo (a[href*="chat.whatsapp.com"])
     document.querySelectorAll('a[href*="chat.whatsapp.com"]').forEach((btn) => {
       btn.addEventListener("click", (event) => {
         event.preventDefault();
         const location = resolveButtonLocation(btn);
-        const href = btn.getAttribute("href") || config.whatsappGroupUrl || "";
+        const href = btn.getAttribute("href") || WHATSAPP_GROUP_URL;
         openLeadModal(href, location);
       });
     });
 
-    // O link de dúvidas (wa.me/554891787828) NÃO dispara Lead — dispara apenas Contact
+    // O link de dúvidas (wa.me/554891787828) dispara APENAS Contact e NÃO abre o modal
     document.querySelectorAll('a[href*="wa.me/554891787828"]').forEach((supportLink) => {
       let isContactLocked = false;
 
@@ -693,14 +755,49 @@
           if (typeof window.fbq === "function") {
             window.fbq("track", "Contact");
           }
-        } catch (_) {
-          // Segue normalmente se bloqueado
-        }
+        } catch (_) {}
 
         setTimeout(() => {
           isContactLocked = false;
         }, 1000);
       });
+    });
+
+    // Modais Legais (Política de Privacidade e Termos de Uso)
+    function openLegalModal(title, htmlContent) {
+      if (!modal || !modalTitle || !modalBody) return;
+      modalTitle.textContent = title;
+      modalBody.innerHTML = htmlContent;
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLegalModal() {
+      if (!modal) return;
+      modal.hidden = true;
+      if (!leadModal || leadModal.hidden) {
+        document.body.style.overflow = "";
+      }
+    }
+
+    if (modalCloseBtn) {
+      modalCloseBtn.addEventListener("click", closeLegalModal);
+    }
+
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeLegalModal();
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (modal && !modal.hidden) {
+          closeLegalModal();
+        } else if (leadModal && !leadModal.hidden) {
+          closeLeadModal();
+        }
+      }
     });
 
     document.querySelectorAll("[data-legal-trigger]").forEach((link) => {
@@ -714,12 +811,12 @@
             return;
           }
           e.preventDefault();
-          openModal(
+          openLegalModal(
             "Política de Privacidade",
             `
-              <p>A <strong>${brand}</strong> respeita a sua privacidade e utiliza dados de navegação exclusivamente para melhorar a experiência na página e organizar a comunicação de pré-lançamento.</p>
-              <p>Ao clicar para ingressar no grupo gratuito de pré-lançamento no WhatsApp, sua participação estará sujeita às configurações de privacidade do próprio aplicativo WhatsApp.</p>
-              <p>Não comercializamos nem compartilhamos dados de contato de participantes com terceiros.</p>
+              <p>A <strong>${brand}</strong> respeita a sua privacidade e utiliza os dados fornecidos exclusivamente para organizar a comunicação e o acesso ao grupo de pré-lançamento.</p>
+              <p>Ao ingressar no grupo gratuito de pré-lançamento no WhatsApp, sua participação estará sujeita às configurações de privacidade do próprio aplicativo WhatsApp.</p>
+              <p>Não comercializamos nem compartilhamos seus dados de contato com terceiros.</p>
             `
           );
         }
@@ -730,7 +827,7 @@
             return;
           }
           e.preventDefault();
-          openModal(
+          openLegalModal(
             "Termos de Uso",
             `
               <p>Esta página tem caráter informativo e destina-se à captação de interessados para o grupo gratuito de pré-lançamento da comunidade <strong>${brand}</strong>, idealizada por <strong>${config.founderName || "Bruno Vieira"}</strong>.</p>
@@ -743,23 +840,8 @@
     });
   }
 
-  function removeHostingBadge() {
-    const clean = () => {
-      document
-        .querySelectorAll('#nl-badge-frame, #nl-hud-frame, iframe[title="Powered by Netlify"], iframe[title="Netlify"]')
-        .forEach((el) => el.remove());
-    };
-    clean();
-    const obs = new MutationObserver(clean);
-    obs.observe(document.documentElement, { childList: true, subtree: true });
-  }
-
-  removeHostingBadge();
-
   document.addEventListener("DOMContentLoaded", () => {
-    removeHostingBadge();
     applySiteConfig();
-    initAnalytics();
     initNavigation();
     initFaqAccordion();
     initModalsAndCtas();

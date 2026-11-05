@@ -1624,6 +1624,10 @@ button {
    MODAL DE CAPTURA DE LEAD (NOME, E-MAIL, TELEFONE + UTMS)
    ========================================================================== */
 
+.modal-backdrop {
+  z-index: 300;
+}
+
 .lead-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1634,6 +1638,10 @@ button {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
+
+.lead-modal-backdrop[hidden] {
+  display: none !important;
 }
 
 .lead-modal-card {
@@ -1661,8 +1669,8 @@ button {
   position: absolute;
   top: 0.9rem;
   right: 0.9rem;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-sm);
   background-color: rgba(234, 232, 219, 0.08);
   border: 1px solid rgba(234, 232, 219, 0.14);
@@ -1670,8 +1678,9 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   line-height: 1;
+  cursor: pointer;
   transition: background-color var(--transition-base), color var(--transition-base);
 }
 
@@ -1706,9 +1715,9 @@ button {
 }
 
 .lead-modal-subtitle {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   line-height: 1.5;
-  color: rgba(234, 232, 219, 0.82);
+  color: rgba(234, 232, 219, 0.84);
   margin-bottom: 1.35rem;
 }
 
@@ -1727,7 +1736,7 @@ button {
 
 .lead-form-label {
   font-family: var(--font-heading);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--color-cream);
@@ -1735,20 +1744,20 @@ button {
 
 .lead-form-input {
   width: 100%;
-  min-height: 48px;
-  padding: 0.75rem 0.95rem;
+  min-height: 52px;
+  padding: 0.8rem 1rem;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--color-cream);
-  background-color: rgba(7, 6, 16, 0.82);
-  border: 1px solid rgba(234, 232, 219, 0.22);
+  background-color: rgba(7, 6, 16, 0.85);
+  border: 1px solid rgba(234, 232, 219, 0.24);
   border-radius: var(--radius-sm);
   outline: none;
   transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .lead-form-input::placeholder {
-  color: rgba(234, 232, 219, 0.42);
+  color: rgba(234, 232, 219, 0.45);
 }
 
 .lead-form-input:focus {
@@ -1756,31 +1765,68 @@ button {
   box-shadow: 0 0 0 3px rgba(198, 159, 0, 0.18);
 }
 
-.lead-form-error {
+.lead-form-input.is-invalid {
+  border-color: #f87171;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.18);
+}
+
+.lead-field-error {
   font-size: 0.78rem;
   color: #f87171;
   font-weight: 600;
-  margin-top: -0.2rem;
+  line-height: 1.35;
+  margin-top: 0.1rem;
+}
+
+.lead-field-error[hidden] {
+  display: none !important;
+}
+
+.lead-form-status {
+  font-size: 0.88rem;
+  color: #4ade80;
+  background-color: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0.15rem 0;
+}
+
+.lead-form-status[hidden] {
+  display: none !important;
 }
 
 .lead-form-submit {
   width: 100%;
-  min-height: 52px;
+  min-height: 54px;
   margin-top: 0.25rem;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
 }
 
 .lead-form-submit[disabled] {
-  opacity: 0.75;
+  opacity: 0.78;
   cursor: wait;
 }
 
 .lead-modal-footer-note {
   margin-top: 0.85rem;
-  font-size: 0.75rem;
-  color: rgba(234, 232, 219, 0.68);
+  font-size: 0.76rem;
+  color: rgba(234, 232, 219, 0.72);
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.45;
+}
+
+.lead-privacy-link {
+  color: var(--color-gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 700;
+}
+
+.lead-privacy-link:hover {
+  color: #e0b70a;
 }
 
 /* Ocultar selo flutuante automático da hospedagem */

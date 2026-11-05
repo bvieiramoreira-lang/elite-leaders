@@ -775,6 +775,42 @@
   </div>
 
   <!-- ========================================================================
+       MODAL DE CAPTURA DE LEAD (PRÉ-LANÇAMENTO WHATSAPP)
+       ======================================================================== -->
+  <div class="lead-modal-backdrop" id="lead-capture-modal" hidden role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+    <div class="lead-modal-card">
+      <button type="button" class="lead-modal-close" id="lead-modal-close-btn" aria-label="Fechar">×</button>
+      <span class="lead-modal-badge">GRUPO VIP DE PRÉ-LANÇAMENTO</span>
+      <h3 class="lead-modal-title" id="lead-modal-title">Falta pouco para você entrar no grupo!</h3>
+      <p class="lead-modal-subtitle">Preencha seus dados para acessar o grupo gratuito de pré-lançamento.</p>
+      <form class="lead-modal-form" id="lead-capture-form" novalidate>
+        <div class="lead-form-group">
+          <label class="lead-form-label" for="lead-input-name">Nome</label>
+          <input type="text" id="lead-input-name" name="nome" class="lead-form-input" placeholder="Seu nome" autocomplete="name" required />
+          <span class="lead-field-error" id="lead-error-name" role="alert" hidden></span>
+        </div>
+        <div class="lead-form-group">
+          <label class="lead-form-label" for="lead-input-email">E-mail</label>
+          <input type="email" id="lead-input-email" name="email" class="lead-form-input" placeholder="Seu melhor e-mail" autocomplete="email" required />
+          <span class="lead-field-error" id="lead-error-email" role="alert" hidden></span>
+        </div>
+        <div class="lead-form-group">
+          <label class="lead-form-label" for="lead-input-phone">WhatsApp com DDD</label>
+          <input type="tel" id="lead-input-phone" name="telefone" class="lead-form-input" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="tel" maxlength="15" required />
+          <span class="lead-field-error" id="lead-error-phone" role="alert" hidden></span>
+        </div>
+        <p class="lead-form-status" id="lead-form-status" role="status" hidden>Tudo certo! Redirecionando para o grupo...</p>
+        <button type="submit" class="btn btn-gold lead-form-submit" id="lead-form-submit-btn">
+          <span>ENTRAR NO GRUPO AGORA</span>
+        </button>
+      </form>
+      <p class="lead-modal-footer-note">
+        Seus dados estão seguros. Ao continuar, você concorda com a nossa <a href="#privacidade" class="lead-privacy-link" data-legal-trigger="privacy">Política de Privacidade</a>.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================================
        MODAL DE TEXTOS LEGAIS (PRIVACIDADE E TERMOS DE USO)
        ======================================================================== -->
   <div class="modal-backdrop" id="site-modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">

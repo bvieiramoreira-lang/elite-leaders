@@ -7,6 +7,11 @@
  * fotos/vídeos e IDs de rastreamento).
  */
 
+// CONSTANTE FÁCIL DE TROCAR — Cole aqui a URL do Web App do Google Apps Script:
+const GOOGLE_SHEETS_WEB_APP_URL = "";
+
+window.GOOGLE_SHEETS_WEB_APP_URL = GOOGLE_SHEETS_WEB_APP_URL;
+
 window.SITE_CONFIG = {
   // 1. IDENTIDADE DA MARCA (Pode ser alterado facilmente sem reconstruir a página)
   brandPrefix: "ELITE",
@@ -48,8 +53,7 @@ window.SITE_CONFIG = {
   },
 
   // 5. INTEGRAÇÕES DE TRÁFEGO E PLANILHA DE LEADS (GOOGLE SHEETS)
-  // Cole abaixo a URL do App da Web gerada no Google Apps Script da sua planilha:
-  googleSheetsWebhookUrl: "",
+  googleSheetsWebhookUrl: GOOGLE_SHEETS_WEB_APP_URL,
 
   analytics: {
     metaPixelId: "1664860865268299",
