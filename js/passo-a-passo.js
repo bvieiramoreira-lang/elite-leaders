@@ -26,7 +26,7 @@
   const GOOGLE_SHEETS_WEB_APP_URL =
     window.GOOGLE_SHEETS_WEB_APP_URL ||
     config.googleSheetsWebhookUrl ||
-    "https://script.google.com/macros/s/AKfycbz2zr8bVZBK1Rn3H1l2yzqeXxbIk4c6SNdUEmPapQCDBl-0tLas3hGoHWdzlbkQdmP--Q/exec";
+    "https://script.google.com/macros/s/AKfycbwotywcJA5pmAVyorNHKIHHfOrcyhcfDGaahHbVCnOruKxgeEBNv4D_RSXbqeeT_gL4Iw/exec";
 
   /**
    * 1. Captura e persiste UTMs e fbclid em sessionStorage (com try/catch)
