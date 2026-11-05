@@ -8,7 +8,8 @@
  */
 
 // CONSTANTE FÁCIL DE TROCAR — Cole aqui a URL do Web App do Google Apps Script:
-const GOOGLE_SHEETS_WEB_APP_URL = "";
+const GOOGLE_SHEETS_WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbz2zr8bVZBK1Rn3H1l2yzqeXxbIk4c6SNdUEmPapQCDBl-0tLas3hGoHWdzlbkQdmP--Q/exec";
 
 window.GOOGLE_SHEETS_WEB_APP_URL = GOOGLE_SHEETS_WEB_APP_URL;
 
